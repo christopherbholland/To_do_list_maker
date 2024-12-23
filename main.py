@@ -31,9 +31,11 @@ def prompt(language_model, system_prompt, task_definition):
         return ""
 
 
-def save_to_file(language_model, style_name, task_definition, results):
+def save_to_file(language_model, style_name, task_filename, task_definition, results):
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
-    filename = f"{language_model}_{style_name}_{timestamp}.txt"
+    # Use the task file's base name (without directory path or extension)
+    task_name = os.path.splitext(os.path.basename(task_filename))[0]
+    filename = f"{task_name}_{style_name}_{language_model}_{timestamp}.txt"
     output_dir = "output"
     os.makedirs(output_dir, exist_ok=True)
     filepath = os.path.join(output_dir, filename)
@@ -41,6 +43,7 @@ def save_to_file(language_model, style_name, task_definition, results):
     file_contents = f"""
 Language Model: {language_model}
 System Prompt: {style_name}
+Task File: {task_filename}
 Task Definition: {task_definition}
 Results: {results}
 """
@@ -86,6 +89,6 @@ try:
                     print(f"Error processing {task_file} with {language_model} and {style_name}: {e}")
                     continue
                 # Save results to a file
-                save_to_file(language_model, style_name, task_definition, results)
+                save_to_file(language_model, style_name, task_file, task_definition, results)
 except KeyboardInterrupt:
     print("\nProgram interrupted by user. Exiting...")
