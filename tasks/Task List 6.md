@@ -1,0 +1,1 @@
+organize work files something with the reports and follow up with team about project deadlines need to figure out next quarter planning probably should update documentation oh and remember to do the thing with the automation setup email filters breaking down big feature into smaller tasks

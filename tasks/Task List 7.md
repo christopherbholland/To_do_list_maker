@@ -1,0 +1,1 @@
+apartment feels overwhelming need to deal with clothes pile and dishes at some point should meal prep but freezer needs organizing first want to try that new recipe keep forgetting laundry maybe set up better system for keeping track of chores bathroom needs deep clean

@@ -1,0 +1,1 @@
+art projects piling up finish the half-done paintings need to organize supplies feeling stuck on the big piece want to try that new technique saw online think about portfolio updates document recent work process creative block needs addressing

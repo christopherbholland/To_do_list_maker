@@ -1,0 +1,1 @@
+reach out to dance people about scheduling and costume ideas need to practice that one sequence having trouble with need to figure out better cooling system for rehearsals should write down choreography notes somewhere want to explore that one movement concept
