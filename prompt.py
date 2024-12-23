@@ -1,4 +1,5 @@
 import os
+from main import prompt, save_to_file
 
 # Models and prompt styles
 models = ["gpt-4o", "gpt-4o-mini"]
@@ -9,6 +10,9 @@ prompt_styles = {
 
 # Directory containing task files
 task_dir = "tasks"
+if not os.path.exists(task_dir):
+    raise FileNotFoundError(f"Task directory '{task_dir}' does not exist.")
+
 task_files = [os.path.join(task_dir, file) for file in os.listdir(task_dir) if file.endswith(".txt")]
 
 # Iterate over models, styles, and tasks
@@ -20,10 +24,7 @@ for language_model in models:
             try:
                 results = prompt(language_model, system_prompt, task_definition)
             except Exception as e:
-                print(e)
+                print(f"Error processing {task_file} with {language_model} and {style_name}: {e}")
+                continue
             # Save results to a file
-            output_dir = os.path.join("output", language_model, style_name)
-            os.makedirs(output_dir, exist_ok=True)
-            output_file = os.path.join(output_dir, os.path.basename(task_file))
-            with open(output_file, "w") as f:
-                f.write(results)
+            save_to_file(language_model, style_name, task_definition, results)
