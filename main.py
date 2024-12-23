@@ -52,7 +52,7 @@ Results: {results}
     print(f"Results saved to {filepath}")
 
 # Models
-models = ["gpt-4", "gpt-3.5-turbo"]
+models = ["gpt-4", "gpt-3.5-turbo", "gpt-4o-mini"]
 
 # Directory containing prompt files
 prompt_dir = "prompts"
