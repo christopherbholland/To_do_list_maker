@@ -1,0 +1,11 @@
+1. Which prompt consistently produces the best results?
+
+   Looking at the Total Scores, the neurodivergent-friendly(claude) prompt consistently achieves the highest scores, with all trials scoring 18 or above. The highest attained score was 23.
+
+2. Are there any notable patterns in what makes certain prompts more effective?
+
+   The scores for 'Task Clarity' and 'Actionability' remain consistently high across all prompts, indicating that these are less dependent on the prompt style. However, 'Priority clarity', 'Timeframes', and 'Task Breakdown' scores varied much more with the prompt, indicating these are areas where different prompts can make a significant difference. The Neurodivergent-friendly prompt scored particularly high in the 'Timeframes' category, which may explain its overall superior performance, as it seems to handle this challenging area better than the other prompts.
+
+3. How do different models perform with these prompts?
+
+   The provided data only includes results from one model (gpt-4o-mini), so we can't compare the performance of different models on these prompts. However, within this model, it's clear that the choice of prompt has a significant effect on performance, with the neurodivergent-friendly prompt resulting in consistently higher scores.

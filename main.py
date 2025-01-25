@@ -8,7 +8,7 @@ import os
 import datetime
 from dotenv import load_dotenv
 import csv
-from critic import evaluate_todo
+from critic import evaluate_todo, analyze_scores
 import argparse
 import glob
 import json
@@ -236,14 +236,40 @@ def run_critic():
                print(f"\nError processing {output_file}: {e}")
                pbar.update(1)
 
+def analyze_results():
+    """Analyzes the scores to determine the most effective prompt and model combinations."""
+    if not os.path.exists('analysis_scores.csv'):
+        print("No analysis scores found. Please run evaluation first.")
+        return
+
+    print("Analyzing prompt and model effectiveness...")
+    
+    try:
+        with open('analysis_scores.csv', 'r') as f:
+            csv_content = f.read()
+        
+        analysis = analyze_scores(client, csv_content)
+        if analysis:
+            print("\nAnalysis Results:")
+            print(analysis)
+            
+            # Save the analysis to a file
+            timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+            with open(f'analysis_report_{timestamp}.txt', 'w') as f:
+                f.write(analysis)
+            print(f"\nAnalysis saved to analysis_report_{timestamp}.txt")
+            
+    except Exception as e:
+        print(f"Error during analysis: {e}")
+
 #------------------------------------------------------------------------------
 # SCRIPT ENTRY POINT
 #------------------------------------------------------------------------------
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Todo List Generator and Critic')
-    parser.add_argument('mode', choices=['generate', 'evaluate'],
-                       help='Mode to run: "generate" for todo list generation, "evaluate" for running critic')
+    parser.add_argument('mode', choices=['generate', 'evaluate', 'analyze'],
+                       help='Mode to run: "generate" for todo list generation, "evaluate" for running critic, "analyze" for analyzing prompt effectiveness')
     parser.add_argument('--clear', action='store_true', help='Clear all directories before running')
     
     args = parser.parse_args()
@@ -251,5 +277,7 @@ if __name__ == "__main__":
     
     if args.mode == 'generate':
         run_generation()
-    else:
+    elif args.mode == 'evaluate':
         run_critic()
+    else:
+        analyze_results()
