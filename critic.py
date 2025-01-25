@@ -1,19 +1,13 @@
-# critic.py
+#==============================================================================
+# CRITIC MODULE
+# Evaluates generated todo lists using defined criteria
+#==============================================================================
+
 from openai import OpenAI
 import os
 
 def evaluate_todo(client, todo_output):
-    """
-    Evaluates a todo list output using GPT-4 as a critic.
-    
-    Args:
-        client: OpenAI client instance
-        todo_output: The generated todo list to evaluate
-        
-    Returns:
-        str: Comma-separated scores (e.g., "4,3,5,4,2")
-        None: If evaluation fails
-    """
+    """Evaluates a todo list output using GPT-4 as a critic."""
     critic_prompt = """Rate this todo list from 1-5 on each criteria:
 1. Task clarity: Are items clearly defined?
 2. Actionability: Can tasks be acted on immediately?
@@ -25,7 +19,7 @@ Return only numbers separated by commas (e.g. 4,3,5,4,2)"""
 
     try:
         completion = client.chat.completions.create(
-            model="gpt-4",  # Using GPT-4 for evaluation as it tends to be more consistent
+            model="gpt-4",
             messages=[
                 {"role": "system", "content": critic_prompt},
                 {"role": "user", "content": todo_output}
