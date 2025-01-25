@@ -44,16 +44,20 @@ def get_next_id():
    
    return f"{next_id:03d}"
 
-
-def setup_directory_structure(clear=False):
+def setup_directory_structure(clear=False, mode=None):
     """Creates/manages directory structure for the project."""
     required_dirs = ['prompts', 'tasks', 'output']
     created = []
     existed = []
     
-    if clear and os.path.exists('output'):
-        shutil.rmtree('output')
-        print("Cleared output directory")
+    # Only clear output directory if we're in generate mode
+    if clear:
+        if mode == 'generate' and os.path.exists('output'):
+            shutil.rmtree('output')
+            print("Cleared output directory")
+        elif mode == 'evaluate' and os.path.exists('analysis_scores.csv'):
+            os.remove('analysis_scores.csv')
+            print("Cleared previous analysis scores")
     
     for dir_name in required_dirs:
         if not os.path.exists(dir_name):
@@ -209,32 +213,50 @@ def run_generation():
        print("\nProgram interrupted by user. Exiting...")
 
 def run_critic():
-   """Runs critic evaluation on existing output files."""
-   print("Running critic evaluation...")
-   
-   with open("analysis_scores.csv", 'w', newline='') as f:
-       writer = csv.writer(f)
-       writer.writerow(['Output File', 'Score String', 'Total Score'])
-   
-   output_files = glob.glob('output/*.txt')
-   
-   with tqdm(total=len(output_files), desc="Evaluating outputs") as pbar:
-       for output_file in output_files:
-           try:
-               with open(output_file, 'r') as f:
-                   content = f.read()
-                   results_section = content.split('Results:')[1].split('Scores:')[0].strip()
-               
-               scores = evaluate_todo(client, results_section)
-               if scores:
-                   score_list = [int(x) for x in scores.split(',')]
-                   total_score = sum(score_list)
-                   save_scores_csv(os.path.basename(output_file), scores, total_score)
-               pbar.update(1)
-               
-           except Exception as e:
-               print(f"\nError processing {output_file}: {e}")
-               pbar.update(1)
+    """Runs critic evaluation on existing output files."""
+    print("Running critic evaluation...")
+    
+    # Check if output directory exists
+    if not os.path.exists('output'):
+        print("Output directory not found. Please run generation first.")
+        return
+        
+    output_files = glob.glob('output/*.txt')
+    
+    # Add diagnostic information
+    print(f"Found {len(output_files)} files to evaluate.")
+    if len(output_files) == 0:
+        print("No .txt files found in output directory. Have you run generation first?")
+        # List what files ARE in the output directory, if any
+        if os.path.exists('output'):
+            files_in_output = os.listdir('output')
+            if files_in_output:
+                print("Files found in output directory:", files_in_output)
+            else:
+                print("Output directory is empty.")
+        return
+    
+    with open("analysis_scores.csv", 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Prompt', 'Output File', 'Score String', 'Total Score'])
+    
+    with tqdm(total=len(output_files), desc="Evaluating outputs") as pbar:
+        for output_file in output_files:
+            try:
+                with open(output_file, 'r') as f:
+                    content = f.read()
+                    results_section = content.split('Results:')[1].split('Scores:')[0].strip()
+                
+                scores = evaluate_todo(client, results_section)
+                if scores:
+                    score_list = [int(x) for x in scores.split(',')]
+                    total_score = sum(score_list)
+                    save_scores_csv(os.path.basename(output_file), scores, total_score)
+                pbar.update(1)
+                
+            except Exception as e:
+                print(f"\nError processing {output_file}: {e}")
+                pbar.update(1)
 
 def analyze_results():
     """Analyzes the scores to determine the most effective prompt and model combinations."""
@@ -270,10 +292,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Todo List Generator and Critic')
     parser.add_argument('mode', choices=['generate', 'evaluate', 'analyze'],
                        help='Mode to run: "generate" for todo list generation, "evaluate" for running critic, "analyze" for analyzing prompt effectiveness')
-    parser.add_argument('--clear', action='store_true', help='Clear all directories before running')
+    parser.add_argument('--clear', action='store_true', help='Clear previous results before running. For generate: clears output directory. For evaluate: clears previous scores.')
     
     args = parser.parse_args()
-    setup_directory_structure(args.clear)
+    setup_directory_structure(args.clear, args.mode)  # Pass the mode
     
     if args.mode == 'generate':
         run_generation()

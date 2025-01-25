@@ -1,0 +1,10 @@
+1. The 'neurodivergent-friendly(claude)' prompt consistently produces the best results. It has the highest total scores, frequently reaching an impressive score of 20 or more.
+
+2. Notable patterns in the effectiveness of the prompts appear to be related to the specificity, clarity and user-targeting of prompts:
+   - The 'basic' prompt style tends to score lower on priority clarity and timeframes, suggesting that a more generic prompt might not be as effective in guiding the models to provide that information.
+   - The 'short' prompt style also scores relatively lower in these categories, indicating that concise prompts might not give enough information for an effective task list.
+   - The 'neurodivergent-friendly(claude)' prompt scores highly across all categories, particularly in task clarity and actionability, implying that a more specific and targeted prompt might better guide the model to produce desirable results. This prompt also seems to be especially effective at incorporating timeframes, which are often lacking in the other prompt styles.
+
+3. The performance of the models, gpt-3.5-turbo vs gpt-4o-mini, does not show dramatic differences in their response to these prompts. Both models can produce high-scoring results. For example, the 'neurodivergent-friendly(claude)' prompt applied to both models resulted in high scores. Nonetheless, slight differences can be noticed, for example:
+   - When using the 'basic' prompt, gpt-3.5-turbo tends to score slightly better, suggesting it might be better suited for more general prompts.
+   - With the 'neurodivergent-friendly(claude)' and 'short' prompts, both models can deliver high scores, indicating their effectiveness across diverse prompt styles.
